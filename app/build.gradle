@@ -1,0 +1,89 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+def cfg = rootProject.ext.configuration
+def libs = rootProject.ext.libraries
+
+android {
+    compileSdkVersion cfg.compileVersion
+    defaultConfig {
+        applicationId "com.robert.mvparch"
+        minSdkVersion cfg.minSdk
+        targetSdkVersion cfg.targetSdk
+        versionCode cfg.versionCode
+        versionName cfg.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        release {
+            keyAlias 'test'
+            storeFile file('test.jks')
+            keyPassword 'test123'
+            storePassword 'test123'
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+
+        debug {
+            keyAlias 'test'
+            storeFile file('test.jks')
+            keyPassword 'test123'
+            storePassword 'test123'
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
+    buildTypes {
+        release {
+            //启用混淆配置
+            minifyEnabled false
+            //Zip代码压缩优化
+            zipAlignEnabled false
+            //移除无用资源
+            shrinkResources false
+            //加载默认混淆文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+
+        debug {
+            //启用混淆配置
+            minifyEnabled true
+            //Zip代码压缩优化
+            zipAlignEnabled true
+            //移除无用资源
+            shrinkResources true
+            //加载默认混淆文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "com.android.support:appcompat-v7:$libs.supportVersion"
+    implementation "com.android.support:recyclerview-v7:$libs.supportVersion"
+    implementation "com.android.support:design:$libs.supportVersion"
+    implementation "com.android.support:cardview-v7:$libs.supportVersion"
+    implementation "com.android.support.constraint:constraint-layout:1.0.2"
+    testImplementation "junit:junit:4.12"
+    androidTestImplementation "com.android.support.test:runner:1.0.1"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.1"
+
+    implementation "io.reactivex.rxjava2:rxandroid:$libs.rxandroid"
+    implementation "io.reactivex.rxjava2:rxjava:$libs.rxjava"
+    implementation "com.squareup.retrofit2:retrofit:$libs.retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$libs.retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$libs.retrofit"
+
+    implementation "com.github.bumptech.glide:glide:$libs.glide"
+    kapt "com.github.bumptech.glide:compiler:$libs.glide"
+}
